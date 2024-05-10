@@ -1,9 +1,9 @@
 {
-	"id": "obsidian-custom-plugin-starter",
-	"name": "Custom Plugin Starter",
+	"id": "legacy-vault-switcher",
+	"name": "Legacy vault switcher",
 	"version": "0.0.1",
-	"minAppVersion": "0.15.0",
-	"description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
+	"minAppVersion": "1.6.0",
+	"description": "For switching back to the legacy vault switcher.",
 	"author": "Boninall",
 	"authorUrl": "https://github.com/Quorafind",
 	"fundingUrl": {
