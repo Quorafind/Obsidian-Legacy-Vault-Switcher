@@ -1,7 +1,7 @@
 {
 	"id": "legacy-vault-switcher",
 	"name": "Legacy vault switcher",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"minAppVersion": "1.6.0",
 	"description": "For switching back to the legacy vault switcher.",
 	"author": "Boninall",
