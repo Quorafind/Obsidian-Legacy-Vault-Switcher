@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-custom-plugin-starter",
-	"version": "0.0.2",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"name": "legacy-vault-switcher",
+	"version": "1.0.0",
+	"description": "Brings back the pre-1.6.0 vault switcher, help, and settings buttons.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
