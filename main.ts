@@ -26,7 +26,7 @@ interface MyPluginSettings {
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
 	restoreVaultSwitcher: true,
-  restoreVaultActionsHelp: true,
+	restoreVaultActionsHelp: true,
 	restoreVaultActionsSettings: true,
 };
 
@@ -47,6 +47,7 @@ export default class MyPlugin extends Plugin {
 			value.detach();
 		});
 		this.ribbonMap.clear();
+		Object.values(this.styleElements).forEach(el => el.remove());
 	}
 
 	async loadSettings() {
@@ -86,9 +87,9 @@ export default class MyPlugin extends Plugin {
 	}
 
 	updateRibbonButtons() {
-    this.toggleRibbonItem('vault', this.settings.restoreVaultSwitcher);
-    this.toggleRibbonItem('help', this.settings.restoreVaultActionsHelp);
-    this.toggleRibbonItem('settings', this.settings.restoreVaultActionsSettings);
+		this.toggleRibbonItem('vault', this.settings.restoreVaultSwitcher);
+		this.toggleRibbonItem('help', this.settings.restoreVaultActionsHelp);
+		this.toggleRibbonItem('settings', this.settings.restoreVaultActionsSettings);
 		this.applyStyleSettings();
 	}
 
@@ -136,9 +137,9 @@ class MyPluginSettingTab extends PluginSettingTab {
 	}
 
 	display() {
-		const { containerEl } = this;
+		const {containerEl} = this;
 		containerEl.empty();
-		containerEl.createEl('h3', { text: 'Ribbon Button Settings' });
+		containerEl.createEl('h3', {text: 'Ribbon Button Settings'});
 
 		this.addToggle('Vault Switcher', 'restoreVaultSwitcher', 'Show or hide the vault switcher button');
 		this.addToggle('Help', 'restoreVaultActionsHelp', 'Show or hide the help button');
