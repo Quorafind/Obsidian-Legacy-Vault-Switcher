@@ -2,12 +2,16 @@
 
 An [Obsidian](https://obsidian.md/) plugin that brings back the pre-1.6.0 vault switcher, help, and settings buttons.
 
-![img.png](./media/usage.png)
+![vault-switcher-top.png](./media/vault-switcher-top.png)
+
+![usage.png](./media/usage.png)
 
 ![legacy-vault-on.png](./media/vault-on.png)
 ![legacy-vault-off.png](./media/vault-off.png)
 
-![legacy-vault-settings.png](./media/switcher-settings.png)
+![legacy-vault-settings.png](./media/new-switcher-settings.png)
+
+![demo.gif](./media/demo.gif)
 
 # Installation
 

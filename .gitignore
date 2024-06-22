@@ -30,3 +30,5 @@ package-lock.json
 *.tar.gz
 *.tgz
 *.rar
+
+.history
