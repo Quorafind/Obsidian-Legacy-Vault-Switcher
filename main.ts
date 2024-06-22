@@ -22,12 +22,16 @@ interface MyPluginSettings {
 	restoreVaultSwitcher: boolean;
 	restoreVaultActionsHelp: boolean;
 	restoreVaultActionsSettings: boolean;
+	restoreVaultSwitcherMove: boolean;
+	restoreVaultFileCount: boolean;
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	restoreVaultSwitcher: true,
+	restoreVaultSwitcher: false,
 	restoreVaultActionsHelp: true,
 	restoreVaultActionsSettings: true,
+	restoreVaultSwitcherMove: true,
+	restoreVaultFileCount: false,
 };
 
 export default class MyPlugin extends Plugin {
@@ -86,10 +90,40 @@ export default class MyPlugin extends Plugin {
 		}
 	}
 
+	toggleVaultSwitcherMove(move: boolean) {
+		//@ts-ignore
+		const leftContainerEl = this.app.workspace.leftSplit.containerEl;
+		const vaultSwitcher = leftContainerEl.querySelector(".workspace-drawer-vault-switcher");
+		if(move) {
+			const navContainer = leftContainerEl.querySelector(".nav-files-container");
+			if(vaultSwitcher && navContainer) {
+				navContainer.parentElement && navContainer.parentElement.insertBefore(vaultSwitcher, navContainer);
+			}
+		} else {
+			const vaultProfile = leftContainerEl.querySelector(".workspace-sidedock-vault-profile");
+			vaultProfile && vaultSwitcher && vaultProfile.prepend(vaultSwitcher);
+		}
+	}
+
+	toggleVaultFileCount(show: boolean) {
+		//@ts-ignore
+		const leftContainerEl = this.app.workspace.leftSplit.containerEl;
+		const vaultSwitcher = leftContainerEl.querySelector(".workspace-drawer-vault-switcher");
+		if (show) {
+			//@ts-ignore get file count
+			const total = this.app.vault.getRoot().getFileCount();
+			vaultSwitcher.setAttribute("data-count", String(total));
+		} else {
+			vaultSwitcher.removeAttribute("data-count");
+		}
+	}
+
 	updateRibbonButtons() {
 		this.toggleRibbonItem('vault', this.settings.restoreVaultSwitcher);
 		this.toggleRibbonItem('help', this.settings.restoreVaultActionsHelp);
 		this.toggleRibbonItem('settings', this.settings.restoreVaultActionsSettings);
+		this.toggleVaultSwitcherMove(this.settings.restoreVaultSwitcherMove);
+		this.toggleVaultFileCount(this.settings.restoreVaultFileCount);
 		this.applyStyleSettings();
 	}
 
@@ -114,6 +148,39 @@ export default class MyPlugin extends Plugin {
 				display: ${this.settings.restoreVaultActionsSettings ? 'none' : 'flex'};
 			}
 		`);
+		this.updateStyle('vault-switcher-move', this.settings.restoreVaultSwitcherMove ? `
+			body:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-profile{
+				${this.settings.restoreVaultActionsHelp && this.settings.restoreVaultActionsSettings ?'display: none!important;':''}
+			}
+			body:not(.is-mobile) .workspace-split.mod-left-split .mod-top-left-space .workspace-drawer-vault-switcher {
+				display: flex;
+				padding-left: var(--size-2-3);
+				padding-top: var(--size-2-3);
+				padding-bottom: var(--size-2-3);
+				gap: var(--size-2-3);
+				color: var(--vault-profile-color);
+				background-color: var(--background-secondary);
+			}
+			body:not(.is-mobile) .workspace-split.mod-left-split .mod-top-left-space .workspace-drawer-vault-switcher:hover {
+				color: var(--vault-profile-color-hover);
+				background-color: var(--background-modifier-hover);
+			}
+			body:not(.is-mobile) .workspace-split.mod-left-split .mod-top-left-space .workspace-drawer-vault-switcher.has-active-menu {
+				background-color: var(--background-modifier-hover);
+			}
+		` : ``);
+		this.updateStyle('vault-file-count', this.settings.restoreVaultFileCount ? `
+			body:not(.is-mobile) .workspace-split.mod-left-split .workspace-drawer-vault-switcher::after {
+				position: absolute;
+				right: 0;
+				content: attr(data-count);
+				display: inline-block;
+				font-size: calc(100% * 0.8);
+				margin-right: 20px;
+				padding: 2px 0;
+				transition: opacity 100ms ease-in-out;
+			}
+		` : ``);
 	}
 
 	updateStyle(id: string, css: string) {
@@ -144,6 +211,8 @@ class MyPluginSettingTab extends PluginSettingTab {
 		this.addToggle('Vault Switcher', 'restoreVaultSwitcher', 'Show or hide the vault switcher button');
 		this.addToggle('Help', 'restoreVaultActionsHelp', 'Show or hide the help button');
 		this.addToggle('Settings', 'restoreVaultActionsSettings', 'Show or hide the settings button');
+		this.addToggle('Move Vault Switcher to the top', 'restoreVaultSwitcherMove', 'Moving the Vault Switcher to the top of the File Explorer.');
+		this.addToggle('Show file count on Vault Switcher', 'restoreVaultFileCount', 'Display the number of files on the right side of the Vault Switcher');
 	}
 
 	addToggle(name: string, settingKey: keyof MyPluginSettings, description: string) {
