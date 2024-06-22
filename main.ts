@@ -43,7 +43,12 @@ export default class MyPlugin extends Plugin {
 		await this.loadSettings();
 		this.addSettingTab(new MyPluginSettingTab(this.app, this));
 		this.initVaultSwitcher();
-		this.updateRibbonButtons();
+		this.app.workspace.onLayoutReady(() => {
+			this.updateRibbonButtons();
+
+			this.app.vault.on("create", this.toggleFileChange.bind(this));
+			this.app.vault.on("delete", this.toggleFileChange.bind(this));
+		})
 	}
 
 	onunload() {
@@ -52,6 +57,12 @@ export default class MyPlugin extends Plugin {
 		});
 		this.ribbonMap.clear();
 		Object.values(this.styleElements).forEach(el => el.remove());
+
+		this.toggleVaultSwitcherMove(false);
+		this.toggleVaultFileCount(false);
+
+		this.app.vault.off("create", this.toggleFileChange.bind(this));
+		this.app.vault.off("delete", this.toggleFileChange.bind(this));
 	}
 
 	async loadSettings() {
@@ -93,13 +104,14 @@ export default class MyPlugin extends Plugin {
 	toggleVaultSwitcherMove(move: boolean) {
 		//@ts-ignore
 		const leftContainerEl = this.app.workspace.leftSplit.containerEl;
-		const vaultSwitcher = leftContainerEl.querySelector(".workspace-drawer-vault-switcher");
 		if(move) {
+			const vaultSwitcher = leftContainerEl.querySelector(".workspace-sidedock-vault-profile .workspace-drawer-vault-switcher");
 			const navContainer = leftContainerEl.querySelector(".nav-files-container");
 			if(vaultSwitcher && navContainer) {
 				navContainer.parentElement && navContainer.parentElement.insertBefore(vaultSwitcher, navContainer);
 			}
 		} else {
+			const vaultSwitcher = leftContainerEl.querySelector(".mod-top-left-space .workspace-drawer-vault-switcher");
 			const vaultProfile = leftContainerEl.querySelector(".workspace-sidedock-vault-profile");
 			vaultProfile && vaultSwitcher && vaultProfile.prepend(vaultSwitcher);
 		}
@@ -116,6 +128,10 @@ export default class MyPlugin extends Plugin {
 		} else {
 			vaultSwitcher.removeAttribute("data-count");
 		}
+	}
+
+	toggleFileChange() {
+		this.toggleVaultFileCount(this.settings.restoreVaultFileCount);
 	}
 
 	updateRibbonButtons() {
