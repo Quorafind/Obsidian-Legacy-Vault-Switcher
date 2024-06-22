@@ -175,7 +175,6 @@ export default class MyPlugin extends Plugin {
 				padding-bottom: var(--size-2-3);
 				gap: var(--size-2-3);
 				color: var(--vault-profile-color);
-				background-color: var(--background-secondary);
 			}
 			body:not(.is-mobile) .workspace-split.mod-left-split .mod-top-left-space .workspace-drawer-vault-switcher:hover {
 				color: var(--vault-profile-color-hover);
